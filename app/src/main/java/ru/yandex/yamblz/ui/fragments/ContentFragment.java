@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 
 import butterknife.BindView;
 import ru.yandex.yamblz.R;
+import ru.yandex.yamblz.ui.other.ItemTouhHelperSimpleCallback;
 
 public class ContentFragment extends BaseFragment {
     private int spanCount = 1;
@@ -42,7 +44,12 @@ public class ContentFragment extends BaseFragment {
         }
         grid = new GridLayoutManager(getContext(), spanCount);
         rv.setLayoutManager(grid);
-        rv.setAdapter(new ContentAdapter());
+
+        ContentAdapter adapter = new ContentAdapter();
+        adapter.setHasStableIds(true);
+        rv.setAdapter(adapter);
+        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouhHelperSimpleCallback(adapter));
+        helper.attachToRecyclerView(rv);
     }
 
     @Override

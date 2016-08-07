@@ -8,12 +8,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 import ru.yandex.yamblz.R;
 
-class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentHolder> {
+public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentHolder> {
 
     private final Random rnd = new Random();
     private final List<Integer> colors = new ArrayList<>();
@@ -28,13 +29,23 @@ class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentHolder> 
         holder.bind(createColorForPosition(position));
     }
 
+    public void removeItem(int position) {
+        colors.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void moveItem(int from, int to) {
+        Collections.swap(colors, from, to);
+        notifyItemMoved(from, to);
+    }
+
     @Override
     public int getItemCount() {
         return Integer.MAX_VALUE;
     }
 
     private Integer createColorForPosition(int position) {
-        if (position >= colors.size()) {
+        while (position >= colors.size()) {
             colors.add(Color.rgb(rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255)));
         }
         return colors.get(position);
