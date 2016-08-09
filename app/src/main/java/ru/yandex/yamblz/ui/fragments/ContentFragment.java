@@ -15,15 +15,18 @@ import android.view.ViewGroup;
 
 import butterknife.BindView;
 import ru.yandex.yamblz.R;
+import ru.yandex.yamblz.ui.other.BorderItemDecoration;
 import ru.yandex.yamblz.ui.other.ItemTouhHelperSimpleCallback;
 
 public class ContentFragment extends BaseFragment {
     private int spanCount = 1;
+    private BorderItemDecoration borderItemDecoration;
 
     @BindView(R.id.rv)
     RecyclerView rv;
     private GridLayoutManager grid;
     static final String SPAN_COUNT = "SPAN_COUNT";
+    static boolean borderFlag = true;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,8 +51,11 @@ public class ContentFragment extends BaseFragment {
         ContentAdapter adapter = new ContentAdapter();
         adapter.setHasStableIds(true);
         rv.setAdapter(adapter);
-        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouhHelperSimpleCallback(adapter));
+        borderItemDecoration = new BorderItemDecoration(getContext());
+        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouhHelperSimpleCallback(adapter, borderItemDecoration));
         helper.attachToRecyclerView(rv);
+
+        rv.addItemDecoration(borderItemDecoration);
     }
 
     @Override
@@ -60,9 +66,8 @@ public class ContentFragment extends BaseFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.add_column){
+        if (id == R.id.add_column) {
             spanCount++;
-            spanCount = Math.min(30, spanCount);
             grid.setSpanCount(spanCount);
             rv.requestLayout();
             rv.getAdapter().notifyDataSetChanged();
@@ -74,6 +79,16 @@ public class ContentFragment extends BaseFragment {
             grid.setSpanCount(spanCount);
             rv.requestLayout();
             rv.getAdapter().notifyDataSetChanged();
+            return true;
+        }
+        if (id == R.id.change_border) {
+            if (borderFlag) {
+                rv.removeItemDecoration(borderItemDecoration);
+                borderFlag = false;
+            } else {
+                rv.addItemDecoration(borderItemDecoration);
+                borderFlag = true;
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);

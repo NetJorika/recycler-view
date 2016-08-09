@@ -10,4 +10,8 @@
         android:id="@+id/del_column"
         android:orderInCategory="200"
         android:title="del column"/>
+    <item
+        android:id="@+id/change_border"
+        android:orderInCategory="300"
+        android:title="change border"/>
 </menu>
